@@ -64,12 +64,87 @@ python examples/train_sarimax_mlflow.py `
 	--steps 30
 ```
 
+### 7) Run Prophet experiment (default + tuned with Exog)
+
+```powershell
+python examples/train_prophet_mlflow.py `
+	--tracking-uri $env:MLFLOW_TRACKING_URI `
+	--experiment-name "wikipedia-language-forecasting-prophet" `
+	--train-path "dataset/train_1.csv" `
+	--exog-path "dataset/Exog_Campaign_eng" `
+	--target-language en `
+	--min-observed-days 300 `
+	--steps 20
+```
+
+### 8) Run PatchTST experiment (TSAI)
+
+Install extra dependencies first:
+
+```powershell
+pip install -r examples/requirements-patchtst.txt
+```
+
+Run PatchTST with English dataset:
+
+```powershell
+python examples/train_patchtst_mlflow.py `
+	--tracking-uri $env:MLFLOW_TRACKING_URI `
+	--experiment-name "wikipedia-language-forecasting-patchtst" `
+	--train-path "dataset/train_1.csv" `
+	--exog-path "dataset/Exog_Campaign_eng" `
+	--target-language en `
+	--min-observed-days 300 `
+	--history 30 `
+	--steps 20 `
+	--epochs 10 `
+	--learning-rate 1e-3 `
+	--batch-size 32
+```
+
+### 9) Run LightGBM experiment
+
+Install dependencies (if not already installed):
+
+```powershell
+pip install -r examples/requirements-forecast.txt
+```
+
+Run LightGBM with English dataset:
+
+```powershell
+python examples/train_lightgbm_mlflow.py `
+	--tracking-uri $env:MLFLOW_TRACKING_URI `
+	--experiment-name "wikipedia-language-forecasting-lightgbm" `
+	--train-path "dataset/train_1.csv" `
+	--exog-path "dataset/Exog_Campaign_eng" `
+	--target-language en `
+	--min-observed-days 300 `
+	--steps 20 `
+	--lags "1,2,3,7,14,21,28" `
+	--n-estimators 500 `
+	--learning-rate 0.03
+```
+
 ### Outputs
 
 - One run for the selected language (default: en).
 - Input dataset tracked with `mlflow.log_input(...)`.
 - Artifacts: ts_dataset_<language>.csv, forecast_vs_actual_<language>.csv, preprocessing_summary.json, feature_enriched_pages_sample.csv.
 - Metrics: RMSE, MAPE, wMAPE.
+
+For Prophet script:
+- One run with two variants: Prophet default and Prophet tuned with Exog regressor.
+- Metrics logged with prefixes `default_*` and `tuned_exog_*`.
+- Artifacts include forecast CSVs and forecast plot PNGs for both variants.
+
+For PatchTST script:
+- One run with PatchTST architecture on sliding-window inputs.
+- Logs dataset, splits (`ts_splits.npz`), prediction artifact, and exported learner file.
+
+For LightGBM script:
+- One run with recursive multi-step forecast using lag features + exogenous regressor.
+- Logs dataset, forecast CSV, feature-importance CSV, metrics (RMSE/MAPE/wMAPE), and model.
 
 ### Notes
 
