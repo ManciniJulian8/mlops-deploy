@@ -1,0 +1,8 @@
+mlflow>=3.0
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.4
+statsmodels>=0.14
+matplotlib>=3.8
+google-cloud-storage>=2.18
+python-certifi-win32>=1.6

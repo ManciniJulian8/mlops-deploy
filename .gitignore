@@ -1,0 +1,18 @@
+.venv/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+
+# Terraform local state and cache
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+.terraform.tfstate.lock.info
+
+# Local experiment outputs
+forecast_vs_actual.csv
+dataset/train_1.csv
+dataset/Exog_Campaign_eng
